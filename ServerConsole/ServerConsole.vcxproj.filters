@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Thread">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8bc4c5ef-2cde-47f5-a7d7-b0fc63914b82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{ca114ea0-715f-41a2-bcb3-0a4cf5df98e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialize">
+      <UniqueIdentifier>{a3a939a6-db24-490a-9ad0-521da646a567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STL">
+      <UniqueIdentifier>{96b6e0ef-5614-4f3c-9145-9a8faf8ba3d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ConsoleFramework">
+      <UniqueIdentifier>{e47dc490-e4a4-4745-9229-ad36b59264bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log">
+      <UniqueIdentifier>{14d32fbc-a06b-40e9-b58f-7d33ec5b6214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandSystem">
+      <UniqueIdentifier>{2511bab6-0edc-42d9-a19b-ace8e778ca60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Console">
+      <UniqueIdentifier>{3faf15dd-879f-42b4-94f4-e9d4dd43a5ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandSystem\CommandConsole">
+      <UniqueIdentifier>{e555afb6-b035-475f-b399-5b4787c588cf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Common\ServerBase.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ServerConfig.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\txMemoryTrace.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialize\txSerializedData.cpp">
+      <Filter>Serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialize\txSerializer.cpp">
+      <Filter>Serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread\CustomThread.cpp">
+      <Filter>Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread\ThreadLock.cpp">
+      <Filter>Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread\TimeLock.cpp">
+      <Filter>Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\BinaryUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\FileUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\MathUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\ServerUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\StringUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\SystemUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleFramework\ConsoleFramework.cpp">
+      <Filter>ConsoleFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Log\GameLog.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Log\GameLogWrap.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandSystem\CommandPool.cpp">
+      <Filter>CommandSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandSystem\txCommand.cpp">
+      <Filter>CommandSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandSystem\txCommandReceiver.cpp">
+      <Filter>CommandSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandSystem\txCommandSystem.cpp">
+      <Filter>CommandSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\Console.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandSystem\CommandConsole\CommandConsoleShowRoomList.cpp">
+      <Filter>CommandSystem\CommandConsole</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\ShareMemoryClient.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\ShareMemoryServer.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\MemoryCheck.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\GameDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\ServerBase.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\ServerCallback.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\ServerConfig.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\ServerDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\ServerEnum.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\StreamBuffer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\txFactoryManager.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\txSingleton.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MemoryDefine.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MemoryInfo.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\txMemoryTrace.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialize\txSerializedData.h">
+      <Filter>Serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialize\txSerializer.h">
+      <Filter>Serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="STL\txMap.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="STL\txSet.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="STL\txSTLBase.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="STL\txVector.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread\CustomThread.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread\ThreadLock.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread\TimeLock.h">
+      <Filter>Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\BinaryUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\FileUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\MathUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ServerUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\StringUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\SystemUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Utility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleFramework\ConsoleFramework.h">
+      <Filter>ConsoleFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleFramework\FrameComponent.h">
+      <Filter>ConsoleFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Log\GameLog.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Log\GameLogWrap.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandSystem\CommandDefine.h">
+      <Filter>CommandSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandSystem\CommandHeader.h">
+      <Filter>CommandSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandSystem\CommandPool.h">
+      <Filter>CommandSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandSystem\txCommand.h">
+      <Filter>CommandSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandSystem\txCommandReceiver.h">
+      <Filter>CommandSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandSystem\txCommandSystem.h">
+      <Filter>CommandSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\Console.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandSystem\CommandConsole\CommandConsoleShowRoomList.h">
+      <Filter>CommandSystem\CommandConsole</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ShareMemoryClient.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ShareMemoryServer.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MemoryCheck.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
