@@ -67,6 +67,8 @@
 #include "ServerEnum.h"
 #include "ServerCallback.h"
 
+#pragma warning(disable:4267)
+
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 // 宏定义
 #if RUN_PLATFORM == PLATFORM_WINDOWS

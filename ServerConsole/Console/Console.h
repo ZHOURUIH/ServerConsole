@@ -4,7 +4,7 @@
 #include "FrameComponent.h"
 #include "ThreadLock.h"
 
-const int CMD_CODE = 2;
+const int DEBUG_SYSTEM_CMD = 2;
 
 class CustomThread;
 class ShareMemoryClient;
@@ -19,13 +19,13 @@ public:
 protected:
 	static bool consoleThread(void* args);
 	static bool receiveThread(void* args);
-	static void parseCmd(const std::string& cmdStr);
 protected:
 	CustomThread* mConsoleThread;
 	CustomThread* mReceiveThread;
-	//StreamBuffer* mReceiveBuffer;
-	//ThreadLock mReceiveLock;
 	static ShareMemoryClient* mShareMemoryClient;
+	char* mBuffer;
+	int mBufferSize;
+	static std::string mOutputPath;
 };
 
 #endif

@@ -115,9 +115,6 @@
     <ClCompile Include="Memory\ShareMemoryClient.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Memory\ShareMemoryServer.cpp">
-      <Filter>Memory</Filter>
-    </ClCompile>
     <ClCompile Include="Memory\MemoryCheck.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
@@ -244,9 +241,6 @@
       <Filter>CommandSystem\CommandConsole</Filter>
     </ClInclude>
     <ClInclude Include="Memory\ShareMemoryClient.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\ShareMemoryServer.h">
       <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="Memory\MemoryCheck.h">

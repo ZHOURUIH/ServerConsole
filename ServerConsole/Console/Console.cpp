@@ -6,14 +6,16 @@
 #include "Utility.h"
 
 ShareMemoryClient* Console::mShareMemoryClient = NULL;
+std::string Console::mOutputPath = "Output/";
 
 Console::Console(const std::string& name)
 	:FrameComponent(name)
 {
 	mConsoleThread = TRACE_NEW(CustomThread, mConsoleThread, "ConsoleThread");
 	mReceiveThread = TRACE_NEW(CustomThread, mReceiveThread, "ReceiveThread");
-	//mReceiveBuffer = TRACE_NEW(StreamBuffer, mReceiveBuffer, 1024 * 1024 * 10);
 	mShareMemoryClient = TRACE_NEW(ShareMemoryClient, mShareMemoryClient);
+	mBufferSize = 1024 * 1024 * 2;
+	mBuffer = TRACE_NEW_ARRAY(char, mBufferSize, mBuffer);
 }
 
 Console::~Console()
@@ -25,8 +27,9 @@ Console::~Console()
 
 void Console::init()
 {
-	mShareMemoryClient->Open();
+	mShareMemoryClient->Open("DebugSystem", mBufferSize + sizeof(DATA_HEADER));
 	mConsoleThread->start(consoleThread, this);
+	mReceiveThread->start(receiveThread, this);
 }
 
 bool Console::consoleThread(void* args)
@@ -34,33 +37,30 @@ bool Console::consoleThread(void* args)
 	std::cout << "输入命令:";
 	std::string cmd;
 	std::cin >> cmd;
-	parseCmd(cmd);
 	std::cout << "输入的命令为 : " << cmd << ",正在执行命令,稍后查看输出文件..." << std::endl;
+	DATA_HEADER writeHeader;
+	writeHeader.mCmd = DEBUG_SYSTEM_CMD;
+	writeHeader.mDataSize = cmd.length() + 1;
+	mShareMemoryClient->WriteCmdData(writeHeader, cmd.c_str());
 	return true;
 }
 
 bool Console::receiveThread(void* args)
 {
 	Console* console = (Console*)(args);
-	DWORD filesize = 0;
-	mShareMemoryClient->GetCmdDataSize(&filesize);
-	if (filesize > 0)
+	DATA_HEADER header;
+	header.mCmd = DEBUG_SYSTEM_CMD;
+	header.mDataSize = console->mBufferSize;
+	int ret = mShareMemoryClient->ReadCmdData(header, console->mBuffer);
+	if (ret < 0)
 	{
-		char* buffer = TRACE_NEW_ARRAY(char, filesize, buffer);
-		mShareMemoryClient->ReadCmdData(CMD_CODE, filesize, buffer);
-		// 将数据写入文件
-		FileUtility::writeFile("test", buffer, filesize);
-		TRACE_DELETE_ARRAY(buffer);
+		LOG_ERROR_DELAY("read share memory error : %d", GetLastError());
+	}
+	else if (ret > 0)
+	{
+		std::string filePath = SystemUtility::getAvailableResourcePath(mOutputPath + header.mUserData + ".txt");
+		LOG_INFO_DELAY("已生成文件 : %s", filePath.c_str());
+		FileUtility::writeFile(filePath, console->mBuffer);
 	}
 	return true;
-}
-
-void Console::parseCmd(const std::string& cmdStr)
-{
-	if (cmdStr == "show room list")
-	{
-		char* buffer = TRACE_NEW_ARRAY(char, 256, buffer);
-		memcpy(buffer, cmdStr.c_str(), cmdStr.length());
-		mShareMemoryClient->WriteCmdData(0, CMD_CODE, 256, buffer);
-	}
 }

@@ -1,33 +1,14 @@
-/******************************************************************
-++  File Name : FFMClass.cpp
-++  Description: 共享內存類
----------------------------------------------------------------
-++  Author:  Fei ZhaoDong
-++  Create time: 2004/3/25 上午 10:00:00
-++  Version:     1.0
-++  Modifier:
-++   Activities:
-++  Update List: 2004/3/29 下午 02:59:45
-*******************************************************************/
-
 #include "ShareMemoryClient.h"
 
 ShareMemoryClient::ShareMemoryClient()
 {
 	m_dwLastError = 0;
+	mMappingSize = 0;
 	_Init();
 }
 ShareMemoryClient::~ShareMemoryClient()
 {
 	Destory();
-}
-ShareMemoryClient::ShareMemoryClient(DWORD dwAccess, char *szMapName, DWORD dwSize)
-{
-	_Init();
-	if (!Open(dwAccess, szMapName, dwSize))
-	{
-		Destory();
-	}
 }
 // 初始化參數
 void ShareMemoryClient::_Init()
@@ -36,6 +17,7 @@ void ShareMemoryClient::_Init()
 	m_lpFileMapBuffer = NULL;
 	m_pMapName = NULL;
 	m_bOpenFlag = FALSE;
+	mMappingSize = 0;
 }
 // 關閉當前對內存文件的訪問
 void ShareMemoryClient::Destory()
@@ -50,159 +32,127 @@ void ShareMemoryClient::Destory()
 		CloseHandle(m_hFileMap);
 		m_hFileMap = NULL;
 	}
-	if (m_pMapName)
-	{
-		free(m_pMapName);
-		m_pMapName = NULL;
-	}
-	_Init();
 }
 // 打開一個內存文件
-BOOL ShareMemoryClient::Open(DWORD dwAccess, char *szMapName, DWORD dwSize)
+bool ShareMemoryClient::Open(char *szMapName, int dwSize)
 {
 	if (m_bOpenFlag)
 	{
 		Destory();
 	}
-	if (szMapName != NULL)
-	{
-		m_pMapName = _strdup(szMapName);
-	}
-	else
-	{
-		m_pMapName = _strdup(DEFAULT_MAPNAME);
-	}
+	m_pMapName = _strdup(szMapName);
+	DWORD dwAccess = FILE_MAP_READ | FILE_MAP_WRITE;
 	m_hFileMap = OpenFileMappingA(dwAccess, TRUE, m_pMapName);
-	if (NULL == m_hFileMap)
+	if (m_hFileMap == NULL)
 	{
 		m_dwLastError = GetLastError();
 		Destory();
-		return FALSE;
+		return false;
 	}
-	m_lpFileMapBuffer = MapViewOfFile(m_hFileMap, dwAccess, 0, 0, dwSize);
-	if (NULL == m_lpFileMapBuffer)
+	mMappingSize = dwSize;
+	m_lpFileMapBuffer = MapViewOfFile(m_hFileMap, dwAccess, 0, 0, mMappingSize);
+	if (m_lpFileMapBuffer == NULL)
 	{
 		m_dwLastError = GetLastError();
 		Destory();
-		return FALSE;
+		return false;
 	}
-	m_bOpenFlag = TRUE;
-	return TRUE;
-}
-// 獲取當前內存文件的指針
-LPVOID ShareMemoryClient::GetBuffer()
-{
-	return (m_lpFileMapBuffer) ? (m_lpFileMapBuffer) : (NULL);
+	m_bOpenFlag = true;
+	return true;
 }
 // 讀取命令數據大小
-BOOL ShareMemoryClient::GetCmdDataSize(DWORD *pDataSize)
+int ShareMemoryClient::GetCmdDataSize()
 {
-	*pDataSize = 0;
-	LPDATA_HEADER pHeader = (LPDATA_HEADER)GetBuffer();
-	if (NULL == pHeader)
+	DATA_HEADER* pHeader = (DATA_HEADER*)getMappingBuffer();
+	if (pHeader == NULL)
 	{
 		m_dwLastError = ERROR_NO_MAPFILE;
-		SetLastError(ERROR_NO_MAPFILE);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return -1;
 	}
-	if (NETRGUSER_CFM_CODE != pHeader->dwConfirmCode)
-	{
-		m_dwLastError = ERROR_INVALID_CFMCODE;
-		SetLastError(ERROR_INVALID_CFMCODE);
-		return FALSE;
-	}
-	if (NETRGUSER_CMD_NONE == pHeader->nCommandCode)
+	if (pHeader->mCmd == 0)
 	{
 		m_dwLastError = ERROR_INVALID_CMDCODE;
-		SetLastError(ERROR_INVALID_CMDCODE);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return -1;
 	}
-	*pDataSize = pHeader->dwDataSize;
-	return TRUE;
+	return pHeader->mDataSize;
 }
 // 讀取命令數據
-BOOL ShareMemoryClient::ReadCmdData(DWORD dwCommandCode, DWORD dwBufSize, LPVOID pOutBuf)
+int ShareMemoryClient::ReadCmdData(DATA_HEADER& header, void* pOutBuf)
 {
-	LPDATA_HEADER pHeader = (LPDATA_HEADER)GetBuffer();
-	if (NULL == pHeader)
+	DATA_HEADER* pHeader = (DATA_HEADER*)getMappingBuffer();
+	if (pHeader == NULL)
 	{
 		m_dwLastError = ERROR_NO_MAPFILE;
-		SetLastError(ERROR_NO_MAPFILE);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return -1;
 	}
-	if (NETRGUSER_CFM_CODE != pHeader->dwConfirmCode)
+	// 如果当前状态不是客户端已写入,则表示没有数据可以读取
+	if (pHeader->mFlag != MS_SERVER_WRITE)
 	{
-		m_dwLastError = ERROR_INVALID_CFMCODE;
-		SetLastError(ERROR_INVALID_CFMCODE);
-		return FALSE;
+		return 0;
 	}
-	if (NETRGUSER_CMD_NONE == pHeader->nCommandCode)
+	if (pHeader->mCmd == 0)
 	{
 		m_dwLastError = ERROR_INVALID_CMDCODE;
-		SetLastError(ERROR_INVALID_CMDCODE);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return -1;
 	}
-	if (pHeader->dwDataSize > dwBufSize)
+	if (pHeader->mDataSize > header.mDataSize)
 	{
 		m_dwLastError = ERROR_BUFFER_OVERFLOW;
-		SetLastError(ERROR_BUFFER_OVERFLOW);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return -1;
 	}
-	if (pHeader->nCommandCode != dwCommandCode)
+	if (pHeader->mCmd != header.mCmd)
 	{
 		m_dwLastError = ERROR_INVALID_CMDCODE;
-		SetLastError(ERROR_INVALID_CMDCODE);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return -1;
 	}
-	ZeroMemory(pOutBuf, dwBufSize);
+	ZeroMemory(pOutBuf, header.mDataSize);
 	// 拷貝數據到緩衝區
-	memcpy(pOutBuf, pHeader->bInfo, pHeader->dwDataSize);
-	return TRUE;
+	memcpy(&header, pHeader, sizeof(DATA_HEADER));
+	memcpy(pOutBuf, (char*)pHeader + sizeof(DATA_HEADER), pHeader->mDataSize);
+	// 设置为服务器已读取
+	pHeader->mFlag = MS_CLIENT_READ;
+	return pHeader->mDataSize;
 }
-BOOL ShareMemoryClient::WriteCmdData(DWORD memSize, DWORD nCommandCode, DWORD dwDataSize, const LPVOID pBuf)
+bool ShareMemoryClient::WriteCmdData(const DATA_HEADER& header, const void* pBuf)
 {
-	if (!memSize)
-		memSize = DEFAULT_MAPSIZE;
-	m_dwSize = memSize;
 	// 檢驗數據的合理性
-	if (NULL == GetBuffer())
+	if (getMappingBuffer() == 0)
 	{
 		m_dwLastError = ERROR_NO_MAPFILE;
-		SetLastError(ERROR_NO_MAPFILE);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return false;
 	}
-	if (NETRGUSER_CMD_NONE == nCommandCode)
+	if (header.mCmd == 0)
 	{
 		m_dwLastError = ERROR_INVALID_CMDCODE;
-		SetLastError(ERROR_INVALID_CMDCODE);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return false;
 	}
-	if (dwDataSize > 0 && pBuf == NULL)
+	if (header.mDataSize > 0 && pBuf == NULL)
 	{
 		m_dwLastError = ERROR_INVALID_USER_BUFFER;
-		SetLastError(ERROR_INVALID_USER_BUFFER);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return false;
 	}
-	if (dwDataSize + sizeof(DATA_HEADER) > GetSize())
+	if (header.mDataSize + sizeof(DATA_HEADER) > getMappingSize())
 	{
 		m_dwLastError = ERROR_BUFFER_OVERFLOW;
-		SetLastError(ERROR_BUFFER_OVERFLOW);
-		return FALSE;
+		SetLastError(m_dwLastError);
+		return false;
 	}
 	// 填寫數據結構
-	// 文件頭
-	DATA_HEADER dataHeader;
-	dataHeader.nCommandCode = nCommandCode;
-	dataHeader.dwDataSize = dwDataSize;
-	ZeroMemory(GetBuffer(), GetSize());
-	memcpy(GetBuffer(), &dataHeader, sizeof(DATA_HEADER));
+	ZeroMemory(getMappingBuffer(), getMappingSize());
+	memcpy(getMappingBuffer(), &header, sizeof(DATA_HEADER));
 	// 數據塊
-	LPDATA_HEADER pData = (LPDATA_HEADER)GetBuffer();
-	memcpy(pData->bInfo, pBuf, dwDataSize);
-	return TRUE;
-}
-// 獲取內存文件大小
-DWORD ShareMemoryClient::GetSize()
-{
-	return m_dwSize;
+	DATA_HEADER* pData = (DATA_HEADER*)getMappingBuffer();
+	memcpy((char*)pData + sizeof(DATA_HEADER), pBuf, header.mDataSize);
+	// 设置为服务器已写入
+	pData->mFlag = MS_CLIENT_WRITE;
+	return true;
 }

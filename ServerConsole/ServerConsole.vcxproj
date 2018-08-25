@@ -102,8 +102,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./CommandSystem;./CommandSystem/CommandConsole;./Common;./Console;./ConsoleFramework;./Log;./Memory;./Serialize;./STL;./Thread;./Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,7 +163,6 @@
     <ClCompile Include="Memory\ShareMemoryClient.cpp" />
     <ClCompile Include="Memory\MemoryCheck.cpp" />
     <ClCompile Include="Memory\txMemoryTrace.cpp" />
-    <ClCompile Include="Memory\ShareMemoryServer.cpp" />
     <ClCompile Include="Serialize\txSerializedData.cpp" />
     <ClCompile Include="Serialize\txSerializer.cpp" />
     <ClCompile Include="Thread\CustomThread.cpp" />
@@ -202,7 +202,6 @@
     <ClInclude Include="Memory\ShareMemoryClient.h" />
     <ClInclude Include="Memory\MemoryCheck.h" />
     <ClInclude Include="Memory\txMemoryTrace.h" />
-    <ClInclude Include="Memory\ShareMemoryServer.h" />
     <ClInclude Include="Serialize\txSerializedData.h" />
     <ClInclude Include="Serialize\txSerializer.h" />
     <ClInclude Include="STL\txMap.h" />
