@@ -4,9 +4,10 @@
 #include "ShareMemoryClient.h"
 #include "StreamBuffer.h"
 #include "Utility.h"
+#include "ConsoleFramework.h"
 
 ShareMemoryClient* Console::mShareMemoryClient = NULL;
-std::string Console::mOutputPath = "Output/";
+std::string Console::mOutputPath = "ConsoleOutput/";
 
 Console::Console(const std::string& name)
 	:FrameComponent(name)
@@ -27,17 +28,22 @@ Console::~Console()
 
 void Console::init()
 {
-	mShareMemoryClient->Open("DebugSystem", mBufferSize + sizeof(DATA_HEADER));
+	bool ret = mShareMemoryClient->Open("DebugSystem", mBufferSize + sizeof(DATA_HEADER));
+	if (!ret)
+	{
+		mConsoleFramework->stop();
+		return;
+	}
 	mConsoleThread->start(consoleThread, this);
 	mReceiveThread->start(receiveThread, this);
 }
 
 bool Console::consoleThread(void* args)
 {
-	std::cout << "输入命令:";
+	SystemUtility::print("输入命令:");
 	std::string cmd;
-	std::cin >> cmd;
-	std::cout << "输入的命令为 : " << cmd << ",正在执行命令,稍后查看输出文件..." << std::endl;
+	SystemUtility::input(cmd);
+	SystemUtility::print("输入的命令为 : " + cmd + ",正在执行命令,稍后查看输出文件...\n");
 	DATA_HEADER writeHeader;
 	writeHeader.mCmd = DEBUG_SYSTEM_CMD;
 	writeHeader.mDataSize = cmd.length() + 1;

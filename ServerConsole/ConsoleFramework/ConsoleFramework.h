@@ -39,7 +39,8 @@ protected:
 #if RUN_PLATFORM == PLATFORM_LINUX
 	unsigned long mStartMiliTime;
 #endif
-	bool mStop;
+	std::atomic<bool> mStop;
+	ThreadLock mLock;
 	txVector<FrameComponent*> mFrameComponentVector;
 	txMap<std::string, FrameComponent*> mFrameComponentMap;
 };

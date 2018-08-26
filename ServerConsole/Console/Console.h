@@ -5,6 +5,8 @@
 #include "ThreadLock.h"
 
 const int DEBUG_SYSTEM_CMD = 2;
+const std::string ROOM_LIST = "RoomList";
+const std::string PLAYER_LIST = "PlayerList";
 
 class CustomThread;
 class ShareMemoryClient;

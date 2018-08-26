@@ -8,10 +8,26 @@
 #pragma comment(lib, "winmm.lib")
 #endif
 
+BOOL ConsoleEventHandler(DWORD dwCtrlType)
+{
+	if (dwCtrlType == CTRL_CLOSE_EVENT)
+	{
+		ConsoleFramework* mConsoleFramework = ConsoleFramework::getSingletonPtr();
+		if (mConsoleFramework != NULL)
+		{
+			mConsoleFramework->stop();
+			mConsoleFramework->destroy();
+		}
+	}
+	return FALSE;
+}
+
 int main()
 {
 	// 设置随机数种子
 	srand((unsigned int)time(0));
+	// 设置窗口事件回调
+	SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleEventHandler, true);
 
 	TimeLock timeLock(30);
 	ConsoleFramework* mConsoleFramework = TRACE_NEW(ConsoleFramework, mConsoleFramework);

@@ -15,3 +15,9 @@ void ServerBase::notifyConstructDone()
 	mGameLog = mConsoleFramework->GET_SYSTEM(GameLog);
 	mConsole = mConsoleFramework->GET_SYSTEM(Console);
 }
+
+void ServerBase::notifyComponentDeconstruct()
+{
+	// 重新再获取一下所有组件
+	notifyConstructDone();
+}

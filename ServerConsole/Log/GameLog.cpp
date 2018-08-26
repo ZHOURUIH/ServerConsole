@@ -155,11 +155,17 @@ void GameLog::logError(const std::string& info, bool delay)
 #elif RUN_PLATFORM == PLATFORM_LINUX
 		printf("%s\n", fullInfo.c_str());
 #endif
-		mGameLog->error(fullInfo);
+		if (mGameLog != NULL)
+		{
+			mGameLog->error(fullInfo);
+		}
 	}
 	else
 	{
-		mGameLog->errorDelay(info);
+		if (mGameLog != NULL)
+		{
+			mGameLog->errorDelay(info);
+		}
 	}
 }
 void GameLog::logInfo(const std::string& info, bool delay)
@@ -175,10 +181,16 @@ void GameLog::logInfo(const std::string& info, bool delay)
 			printf("%s\n", fullInfo.c_str());
 #endif
 		}
-		mGameLog->log(fullInfo);
+		if (mGameLog != NULL)
+		{
+			mGameLog->log(fullInfo);
+		}
 	}
 	else
 	{
-		mGameLog->logDelay(info);
+		if (mGameLog != NULL)
+		{
+			mGameLog->logDelay(info);
+		}
 	}
 }

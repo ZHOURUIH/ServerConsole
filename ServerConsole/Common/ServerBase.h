@@ -10,6 +10,7 @@ class ServerBase
 {
 public:
 	static void notifyConstructDone();
+	static void notifyComponentDeconstruct();
 public:
 	static ConsoleFramework* mConsoleFramework;
 	static ServerConfig* mServerConfig;
