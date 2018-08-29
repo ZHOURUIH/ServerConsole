@@ -7,6 +7,7 @@
 const int DEBUG_SYSTEM_CMD = 2;
 const std::string ROOM_LIST = "RoomList";
 const std::string PLAYER_LIST = "PlayerList";
+const std::string MATCH_POOL = "MatchPool";
 
 class CustomThread;
 class ShareMemoryClient;
@@ -21,6 +22,7 @@ public:
 protected:
 	static bool consoleThread(void* args);
 	static bool receiveThread(void* args);
+	void initCmdList();
 protected:
 	CustomThread* mConsoleThread;
 	CustomThread* mReceiveThread;
@@ -28,6 +30,7 @@ protected:
 	char* mBuffer;
 	int mBufferSize;
 	static std::string mOutputPath;
+	txSet<std::string> mCmdList;
 };
 
 #endif
